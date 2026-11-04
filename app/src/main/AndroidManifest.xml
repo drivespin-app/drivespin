@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.type.automotive" android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 안드로이드 차량 표준: 남은 주행거리(RANGE_REMAINING) -->
+    <uses-permission android:name="android.car.permission.CAR_ENERGY" />
+    <!-- 배터리 전체 용량(INFO_EV_BATTERY_CAPACITY) -->
+    <uses-permission android:name="android.car.permission.CAR_INFO" />
+    <!-- Pleos: 주행가능거리(CAR_DRIVE), 탑승 인원(CAR_SEATS), 길안내, 음성 -->
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE_SEARCH" />
+    <!-- 내비 화면 앞으로·주변 충전소 화면 -->
+    <uses-permission android:name="pleos.car.permission.NAVI_CUSTOM_MAP" />
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+    <!-- 음성 일기: 차 마이크로 한마디 듣기(마이크는 Pleos가 켜고 끈다) -->
+    <uses-permission android:name="pleos.car.permission.STT_SERVICE" />
+
+    <!-- 차 내비 앱을 직접 띄우려면 보여야 한다 -->
+    <queries>
+        <package android:name="ai.umos.maps.android.navigation.app" />
+    </queries>
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+        android:supportsRtl="true">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
+            <!-- 주행 중에도 쓸 수 있게(DO). 주행 중엔 큰 버튼 + 음성만 남긴다 -->
+            <meta-data android:name="distractionOptimized" android:value="true" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
