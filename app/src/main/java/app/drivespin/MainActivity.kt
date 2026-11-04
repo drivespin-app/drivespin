@@ -437,7 +437,9 @@ private fun ResultCard(p: Pick?, rangeKm: Double, driving: Boolean, arriveCharge
         var img by remember(p) { mutableStateOf<ImageBitmap?>(null) }
         LaunchedEffect(p) { img = loadImage(p.f.image) }
         if (!driving) img?.let { // 주행 중엔 사진·긴 글 숨김(규제)
-            Image(it, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxWidth().height(170.dp).clip(RoundedCornerShape(18.dp)))
+            // 관광공사 사진은 공공누리 3유형(변경 금지)일 수 있어 자르지 않고 통째로, 출처를 함께 적는다
+            Image(it, null, contentScale = ContentScale.Fit, modifier = Modifier.fillMaxWidth().height(170.dp).clip(RoundedCornerShape(18.dp)).background(SegB))
+            Text(PHOTO_CREDIT, fontSize = 18.sp, color = Sub)
         }
         Text(p.f.title, fontSize = 40.sp, lineHeight = 52.sp, fontWeight = FontWeight.Black, color = Ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
         val tight = p.tight(rangeKm)
@@ -598,11 +600,13 @@ private fun MemoryCard(memories: List<String>, onClose: () -> Unit) {
                 var img by remember(u) { mutableStateOf<ImageBitmap?>(null) }
                 LaunchedEffect(u) { img = loadImage(u) }
                 Box(Modifier.weight(1f).height(240.dp).clip(RoundedCornerShape(18.dp)).background(SegB)) {
-                    // 폰 사진은 세로가 많고 얼굴이 위쪽에 있다 → 가운데보다 조금 위를 기준으로 자른다
-                    img?.let { Image(it, null, contentScale = ContentScale.Crop, alignment = androidx.compose.ui.BiasAlignment(0f, -0.3f), modifier = Modifier.fillMaxSize()) }
+                    // 폰 사진은 세로가 많고 얼굴이 위쪽에 있다 → 가운데보다 조금 위를 기준으로 자른다. 관광공사 사진(주소)은 자르지 않는다
+                    val ours = !u.startsWith("http")
+                    img?.let { Image(it, null, contentScale = if (ours) ContentScale.Crop else ContentScale.Fit, alignment = androidx.compose.ui.BiasAlignment(0f, -0.3f), modifier = Modifier.fillMaxSize()) }
                 }
             }
         }
+        if (pics.any { it.startsWith("http") }) Text(PHOTO_CREDIT, fontSize = 18.sp, color = Sub)
         memories.take(3).forEach { m ->
             val p = m.split('\t')
             Text("${agoText(p[0])} ${p.getOrElse(5) { "" }} · ${p[1]}".replace("  ", " "), fontSize = 28.sp, color = Ink, maxLines = 1, overflow = TextOverflow.Ellipsis)

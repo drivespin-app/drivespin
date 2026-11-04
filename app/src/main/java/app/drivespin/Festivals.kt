@@ -10,6 +10,7 @@ import kotlin.math.*
 
 // 축제 서버(한국관광공사 TourAPI 축제를 모아 둔 곳)에서 오늘 열리는 축제를 받는다.
 const val FESTIVAL_URL = "https://drivespin.pages.dev/festivals"
+const val PHOTO_CREDIT = "사진 출처: 한국관광공사" // 공공누리 1·3유형 모두 출처 표시가 조건
 
 data class Festival(val title: String, val addr: String, val lat: Double, val lng: Double, val start: String, val end: String, val image: String = "", val id: String = "")
 
